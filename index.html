@@ -99,8 +99,8 @@
     .section-title{font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
     .section-sub{font-size:1rem;color:var(--text2);line-height:1.75;max-width:540px}
 
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
-    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal{opacity:0;transform:translateY(28px);filter:blur(5px);transition:opacity .7s var(--ease),transform .7s var(--ease),filter .7s var(--ease)}
+    .reveal.visible{opacity:1;transform:translateY(0);filter:blur(0)}
     .reveal-delay-1{transition-delay:.08s}
     .reveal-delay-2{transition-delay:.16s}
     .reveal-delay-3{transition-delay:.24s}
@@ -150,7 +150,8 @@
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
 
     .hero-name{font-family:var(--font-heading);font-size:clamp(3rem,6.5vw,5.4rem);font-weight:700;letter-spacing:-.04em;line-height:1.0;color:var(--text1);margin-bottom:20px}
-    .hero-name .accent{color:var(--teal)}
+    .hero-name .accent{background:linear-gradient(110deg,var(--teal) 0%,#93c5fd 45%,var(--teal) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:nameShimmer 5s linear infinite}
+    @keyframes nameShimmer{to{background-position:200% center}}
 
     .hero-typed-row{font-family:var(--font-mono);font-size:clamp(.85rem,1.8vw,1.05rem);color:var(--text2);margin-bottom:28px;display:flex;align-items:center;min-height:1.8em}
     .typed-prefix{color:var(--text3);margin-right:10px}
@@ -265,9 +266,10 @@
 
     .proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform var(--t) var(--ease),border-color var(--t),box-shadow var(--t)}
-    .proj-card:hover{transform:translateY(-4px);border-color:var(--border-light);box-shadow:0 14px 40px rgba(0,0,0,.45)}
-    .proj-card.is-featured{border-color:rgba(45,212,191,.2);box-shadow:0 0 0 1px rgba(45,212,191,.08)}
-    .proj-card.is-featured:hover{border-color:rgba(45,212,191,.4);box-shadow:0 0 0 1px rgba(45,212,191,.15),0 14px 40px rgba(45,212,191,.06)}
+    .proj-card:hover{border-color:var(--border-light);box-shadow:0 14px 40px rgba(0,0,0,.45)}
+    .proj-card.is-featured{border-color:rgba(45,212,191,.2);box-shadow:0 0 0 1px rgba(45,212,191,.08);animation:featuredPulse 4s ease-in-out infinite}
+    .proj-card.is-featured:hover{border-color:rgba(45,212,191,.4);box-shadow:0 0 0 1px rgba(45,212,191,.2),0 16px 48px rgba(45,212,191,.08);animation:none}
+    @keyframes featuredPulse{0%,100%{box-shadow:0 0 0 1px rgba(45,212,191,.08),0 0 18px rgba(45,212,191,.03)}50%{box-shadow:0 0 0 1px rgba(45,212,191,.18),0 0 28px rgba(45,212,191,.09)}}
 
     .proj-bar{height:4px}
     .bar-analytics{background:linear-gradient(90deg,var(--teal),#99f6e4);background-size:200% 100%}
@@ -372,6 +374,37 @@
     .footer-logo{font-family:var(--font-heading);font-size:.92rem;font-weight:700;color:var(--text2)}
     .footer-logo span{color:var(--teal)}
 
+    /* ── PRELOADER ──────────────────────────────────────── */
+    #preloader{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:28px}
+    #preloader.exit{animation:preExit .7s cubic-bezier(.4,0,.2,1) forwards}
+    @keyframes preExit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.04);visibility:hidden}}
+    .pre-logo{font-family:var(--font-heading);font-size:3rem;font-weight:700;letter-spacing:-.04em;color:var(--text1);opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+    .pre-logo span{color:var(--teal)}
+    .pre-logo.show{opacity:1;transform:translateY(0)}
+    .pre-track{width:200px;height:1px;background:var(--border);border-radius:1px;overflow:hidden;opacity:0;transition:opacity .3s ease .2s}
+    .pre-track.show{opacity:1}
+    #pre-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width 1s cubic-bezier(.4,0,.2,1)}
+
+    /* ── HERO SPOTLIGHT ─────────────────────────────────── */
+    #hero-spotlight{position:absolute;inset:0;z-index:0;pointer-events:none;transition:background .08s linear}
+
+    /* ── HERO ENTRANCE ──────────────────────────────────── */
+    .hero-left>*{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+    body.hero-ready .hero-left>*:nth-child(1){opacity:1;transform:none;transition-delay:.05s}
+    body.hero-ready .hero-left>*:nth-child(2){opacity:1;transform:none;transition-delay:.18s}
+    body.hero-ready .hero-left>*:nth-child(3){opacity:1;transform:none;transition-delay:.3s}
+    body.hero-ready .hero-left>*:nth-child(4){opacity:1;transform:none;transition-delay:.42s}
+    body.hero-ready .hero-left>*:nth-child(5){opacity:1;transform:none;transition-delay:.52s}
+    body.hero-ready .hero-left>*:nth-child(6){opacity:1;transform:none;transition-delay:.58s}
+
+    /* ── SECTION NUMBERS ────────────────────────────────── */
+    body{counter-reset:sec}
+    .section-label{counter-increment:sec}
+    .section-label::before{content:'0' counter(sec) ' /\00a0';color:var(--text3);font-size:.65rem}
+
+    /* ── CONTACT GLOW ───────────────────────────────────── */
+    #contact{background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(45,212,191,.035),transparent 70%)}
+
     /* ── BACK TO TOP ────────────────────────────────────── */
     #back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface);border:1px solid var(--border-light);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem;z-index:900;opacity:0;pointer-events:none;transition:all var(--t) var(--ease)}
     #back-top.visible{opacity:1;pointer-events:all}
@@ -453,6 +486,12 @@
 </head>
 
 <body>
+  <!-- PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <div class="pre-logo" id="pre-logo">AC<span>.</span></div>
+    <div class="pre-track" id="pre-track"><div id="pre-fill"></div></div>
+  </div>
+
   <div id="cursor-dot"></div>
   <div id="scroll-progress"></div>
 
@@ -486,6 +525,7 @@
   <!-- HERO -->
   <section id="home" class="hero">
     <canvas id="particles-canvas"></canvas>
+    <div id="hero-spotlight"></div>
     <div class="container">
       <div class="hero-grid">
         <div class="hero-left">
@@ -1210,8 +1250,50 @@ rfm_scores <span class="kw">AS</span> (
       if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(closeModal);
     });
 
-    /* ── PAGE LOAD ──────────────────────────────────── */
-    window.addEventListener('load',()=>document.body.classList.add('loaded'));
+    /* ── PRELOADER ──────────────────────────────────── */
+    (function(){
+      const pl=document.getElementById('preloader');
+      const logo=document.getElementById('pre-logo');
+      const track=document.getElementById('pre-track');
+      const fill=document.getElementById('pre-fill');
+      setTimeout(()=>{logo.classList.add('show');track.classList.add('show')},80);
+      setTimeout(()=>{fill.style.width='100%'},120);
+      setTimeout(()=>{
+        document.body.classList.add('loaded');
+        pl.classList.add('exit');
+        setTimeout(()=>{
+          pl.style.display='none';
+          requestAnimationFrame(()=>document.body.classList.add('hero-ready'));
+        },700);
+      },1500);
+    })();
+
+    /* ── HERO SPOTLIGHT ─────────────────────────────── */
+    (function(){
+      const hero=document.querySelector('.hero');
+      const sp=document.getElementById('hero-spotlight');
+      if(!hero||!sp)return;
+      hero.addEventListener('mousemove',e=>{
+        const r=hero.getBoundingClientRect();
+        sp.style.background=`radial-gradient(700px circle at ${e.clientX-r.left}px ${e.clientY-r.top}px,rgba(45,212,191,.08),transparent 70%)`;
+      });
+      hero.addEventListener('mouseleave',()=>sp.style.background='none');
+    })();
+
+    /* ── 3D CARD TILT ───────────────────────────────── */
+    document.querySelectorAll('.proj-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`perspective(900px) rotateX(${y*-7}deg) rotateY(${x*7}deg) translateZ(6px)`;
+        card.style.transition='transform .08s ease';
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transition='transform .5s ease';
+        card.style.transform='';
+      });
+    });
 
     /* ── BACK TO TOP ────────────────────────────────── */
     const backTop=document.getElementById('back-top');

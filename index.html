@@ -85,12 +85,10 @@
     ul{list-style:none}
 
     /* ── CUSTOM CURSOR ──────────────────────────────────── */
-    #cursor-dot,#cursor-ring{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:opacity .3s}
-    #cursor-dot{width:6px;height:6px;background:var(--teal);border-radius:50%}
-    #cursor-ring{width:30px;height:30px;border:1px solid rgba(45,212,191,.5);border-radius:50%;transition:transform .12s var(--ease),opacity .3s,width .2s,height .2s}
-    body:not(.cursor-loaded) #cursor-dot,
-    body:not(.cursor-loaded) #cursor-ring{opacity:0}
-    .cursor-hover #cursor-ring{width:44px;height:44px;border-color:var(--teal)}
+    body,a,button{cursor:none}
+    #cursor-dot{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);width:8px;height:8px;background:var(--teal);border-radius:50%;opacity:0;transition:width .1s,height .1s,background .1s,opacity .3s}
+    #cursor-dot.loaded{opacity:1}
+    .cursor-hover #cursor-dot{width:16px;height:16px;background:rgba(45,212,191,.5)}
 
     /* ── SCROLL PROGRESS ────────────────────────────────── */
     #scroll-progress{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,var(--teal),var(--blue));z-index:1001;transition:width .05s linear}
@@ -405,7 +403,6 @@
 
 <body>
   <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
   <div id="scroll-progress"></div>
 
   <!-- NAV -->
@@ -447,7 +444,7 @@
             <span class="typed-prefix">→</span>
             <span class="typed-word" id="typed-word"></span><span class="typed-cursor">|</span>
           </div>
-          <p class="hero-bio">I turn raw data into decisions people can act on — SQL for the queries, Python for the pipeline, Tableau for the story. I'm also exploring SDR, BDR, and AE roles where I can bring a data-driven edge to sales. And I build AI systems that generate creative for DTC and SaaS brands.</p>
+          <p class="hero-bio">I build analytics pipelines end-to-end and turn the output into something a decision-maker can actually use. I'm also exploring SDR and AE roles at SaaS and data companies. On the side I build AI systems that generate creative for DTC brands.</p>
           <div class="hero-actions">
             <a href="#projects" class="btn btn-primary">View My Work</a>
             <a href="#contact"  class="btn btn-ghost">Get in Touch &nbsp;→</a>
@@ -487,9 +484,9 @@
         </div>
         <div class="about-text">
           <p>I'm a <strong>data analyst</strong> who covers the full stack from raw CSV to executive dashboard. My work covers three industries: <span class="hl">e-commerce</span>, <span class="hl">healthcare</span>, and <span class="hl">SaaS</span>, running every step of the pipeline myself.</p>
-          <p>I write <strong>PostgreSQL</strong> for the heavy lifting, <strong>Python</strong> pipelines for cleaning and modeling, <strong>Excel</strong> for the stakeholder workbook, and <strong>Tableau</strong> for the visual story. I take analysis from the initial business question through to a deliverable the right person can actually use.</p>
-          <p>Outside of analytics, I build AI automation tools for DTC and SaaS brands. The creative engine I built runs a multi-agent Claude API workflow covering customer voice research, brand positioning, creative production, compliance review, and final delivery.</p>
-          <p>I'm also actively exploring <span class="hl">SDR, BDR, and AE roles</span> — particularly at SaaS and data companies. My background in analytics means I understand the product, can run a data-driven outreach motion, and speak a prospect's language before the first call.</p>
+          <p><strong>PostgreSQL</strong> is where the heavy work happens. <strong>Python</strong> handles cleaning and modeling. The final deliverable usually lands in <strong>Tableau</strong> or an <strong>Excel</strong> workbook built for whoever's going to open it.</p>
+          <p>Outside of analytics, I build AI automation tools for DTC and SaaS brands. The creative engine I built is a multi-agent Claude API workflow that goes from customer voice research all the way through to production-ready copy.</p>
+          <p>I'm also looking into <span class="hl">SDR and AE roles</span> at SaaS and data companies. Having a real analytics background means I actually understand the product before I pick up the phone.</p>
         </div>
       </div>
 
@@ -519,7 +516,7 @@
       <div class="skills-header reveal">
         <span class="section-label">Tech Stack</span>
         <h2 class="section-title">What I work with</h2>
-        <p class="section-sub">The tools I reach for when building analytics pipelines, dashboards, and automation systems.</p>
+        <p class="section-sub">The tools I reach for depending on what the problem actually needs.</p>
       </div>
       <div class="skills-grid">
         <div class="skill-cat reveal reveal-delay-1">
@@ -556,7 +553,7 @@
       <div class="projects-header reveal">
         <span class="section-label">Selected Work</span>
         <h2 class="section-title">Projects</h2>
-        <p class="section-sub">End-to-end analytics builds, AI automation tools, and web applications. Each one starts with a real business question.</p>
+        <p class="section-sub">Analytics builds, AI work, and a web project. Each one starts with a real business question.</p>
       </div>
       <div class="filter-row reveal">
         <button class="filter-btn active" data-filter="all">All</button>
@@ -573,7 +570,7 @@
           <div class="proj-body">
             <div class="proj-meta"><span class="proj-cat cat-analytics">Analytics</span><span class="proj-featured">Featured</span></div>
             <h3 class="proj-name">RavenStack: SaaS Churn & Revenue Analytics</h3>
-            <p class="proj-desc">End-to-end SaaS analytics pipeline covering MRR waterfall, customer health scoring, cohort retention, and disengagement alerting. Fixed two non-obvious data quality bugs that were inflating MRR 9x and hiding $109K in monthly churn MRR.</p>
+            <p class="proj-desc">Full SaaS analytics pipeline covering MRR movement and customer health scoring. Found two data quality bugs that were inflating MRR 9x and hiding $109K in monthly churn.</p>
             <div class="proj-stat"><i class="fas fa-circle-dot"></i>33,100 records · 500 accounts · 24 months · NRR 89.3%</div>
             <div class="proj-stack"><span class="ptag">PostgreSQL</span><span class="ptag">Python</span><span class="ptag">pandas</span><span class="ptag">openpyxl</span><span class="ptag">Excel</span></div>
             <div class="proj-footer">
@@ -590,7 +587,7 @@
           <div class="proj-body">
             <div class="proj-meta"><span class="proj-cat cat-analytics">Analytics</span><span class="proj-featured">Featured</span></div>
             <h3 class="proj-name">E-Commerce Logistics & Customer Analytics</h3>
-            <p class="proj-desc">Logistics and customer analytics on the Olist Brazilian e-commerce dataset. Found that orders delayed 8+ days produce a 70% one-star review rate vs. 9% for on-time deliveries. Delivered three dashboards for COO, Logistics Director, and Marketing.</p>
+            <p class="proj-desc">Logistics and customer analytics on the Olist Brazilian e-commerce dataset. Found that orders delayed 8+ days produce a 70% one-star review rate vs. 9% on-time. Built three executive dashboards.</p>
             <div class="proj-stat"><i class="fas fa-circle-dot"></i>99,000 orders · 27 states · 3 executive dashboards</div>
             <div class="proj-stack"><span class="ptag">PostgreSQL</span><span class="ptag">Excel</span><span class="ptag">Tableau</span><span class="ptag">RFM Segmentation</span></div>
             <div class="proj-footer">
@@ -607,7 +604,7 @@
           <div class="proj-body">
             <div class="proj-meta"><span class="proj-cat cat-analytics">Analytics</span></div>
             <h3 class="proj-name">Healthcare Revenue Cycle Analytics</h3>
-            <p class="proj-desc">Hospital finance and operations analytics built for CMO, VP Revenue Cycle, and Director of Operations. Covers AR aging across four time buckets, department net collection rates, clinical throughput, and no-show behavior across 110K scheduling records.</p>
+            <p class="proj-desc">Hospital finance and operations analytics built for three stakeholder audiences. Covers billing recovery and no-show prediction across 110K scheduling records.</p>
             <div class="proj-stat"><i class="fas fa-circle-dot"></i>110,527 records · 7 SQL scripts · 3 dashboards</div>
             <div class="proj-stack"><span class="ptag">PostgreSQL</span><span class="ptag">Excel</span><span class="ptag">Tableau</span><span class="ptag">Healthcare BI</span></div>
             <div class="proj-footer">
@@ -624,7 +621,7 @@
           <div class="proj-body">
             <div class="proj-meta"><span class="proj-cat cat-ai">AI & Automation</span></div>
             <h3 class="proj-name">Lander Agent: AI Landing Page Engine</h3>
-            <p class="proj-desc">Autonomous AI agent that generates high-converting advertorials and listicles for DTC brands. Built on Claude API with a structured copywriting framework covering VOC research, emotional arc, social proof, and CTA strategy. Outputs Replo-compatible HTML ready for Shopify.</p>
+            <p class="proj-desc">Autonomous AI agent that generates advertorials and listicles for DTC brands. Built on Claude API with a structured copywriting framework. Outputs Replo-compatible HTML ready to paste into Shopify.</p>
             <div class="proj-stat"><i class="fas fa-circle-dot"></i>Advertorials · Listicles · Replo/Shopify-compatible output</div>
             <div class="proj-stack"><span class="ptag">Claude API</span><span class="ptag">Prompt Engineering</span><span class="ptag">DTC Copywriting</span><span class="ptag">HTML</span></div>
             <div class="proj-footer">
@@ -675,7 +672,7 @@
       <div class="creative-header reveal">
         <span class="section-label">Creative Strategy</span>
         <h2 class="section-title">AI-Powered Creative Systems</h2>
-        <p class="section-sub">I build multi-agent AI workflows that handle the research, strategy, writing, and compliance review that goes into high-converting DTC and SaaS creative.</p>
+        <p class="section-sub">I build multi-agent AI workflows that handle everything from customer research to production-ready copy for DTC and SaaS brands.</p>
       </div>
 
       <div class="pipeline reveal reveal-delay-1">
@@ -758,7 +755,7 @@
       <div class="contact-wrap reveal">
         <span class="section-label" style="display:block;text-align:center;margin-bottom:14px">Get In Touch</span>
         <h2 class="contact-title">Let's build something<br><span class="hl">worth measuring.</span></h2>
-        <p class="contact-sub">Open to analytics roles, SDR/BDR/AE positions, data consulting, and interesting side projects. If you have data that needs to make sense — or a sales team that could use a data-driven edge — reach out.</p>
+        <p class="contact-sub">Open to analytics work and SDR/AE roles at SaaS companies. If you have data that needs to make sense, reach out.</p>
         <div class="contact-actions">
           <a href="mailto:whoschoas12345@gmail.com" class="btn btn-primary"><i class="fas fa-envelope"></i>Say Hello</a>
           <a href="./resume.pdf" target="_blank" class="btn btn-ghost">Download Resume ↗</a>
@@ -985,19 +982,12 @@
   <!-- JS -->
   <script>
     /* ── CURSOR ─────────────────────────────────────── */
-    const dot  = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mx=0,my=0,rx=0,ry=0;
+    const dot = document.getElementById('cursor-dot');
     document.addEventListener('mousemove',e=>{
-      mx=e.clientX; my=e.clientY;
-      dot.style.left=mx+'px'; dot.style.top=my+'px';
-      document.body.classList.add('cursor-loaded');
+      dot.style.left=e.clientX+'px';
+      dot.style.top=e.clientY+'px';
+      dot.classList.add('loaded');
     });
-    (function lerpRing(){
-      rx+=(mx-rx)*.14; ry+=(my-ry)*.14;
-      ring.style.left=rx+'px'; ring.style.top=ry+'px';
-      requestAnimationFrame(lerpRing);
-    })();
     document.querySelectorAll('a,button,.proj-card,.stat-card,.skill-cat,.brand-chip,.pipeline-stage').forEach(el=>{
       el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
       el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));

@@ -372,6 +372,21 @@
     .footer-logo{font-family:var(--font-heading);font-size:.92rem;font-weight:700;color:var(--text2)}
     .footer-logo span{color:var(--teal)}
 
+    /* ── BACK TO TOP ────────────────────────────────────── */
+    #back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface);border:1px solid var(--border-light);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem;z-index:900;opacity:0;pointer-events:none;transition:all var(--t) var(--ease)}
+    #back-top.visible{opacity:1;pointer-events:all}
+    #back-top:hover{color:var(--teal);border-color:var(--teal);background:var(--teal-dim);transform:translateY(-2px)}
+
+    /* ── PAGE LOAD FADE ─────────────────────────────────── */
+    body{opacity:0;transition:opacity .35s ease}
+    body.loaded{opacity:1}
+
+    /* ── HERO CONSTRAINT ────────────────────────────────── */
+    .hero-left{max-width:700px}
+
+    /* ── FOCUS VISIBLE ──────────────────────────────────── */
+    :focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+
     /* ── RESPONSIVE ─────────────────────────────────────── */
     @media(max-width:1024px){
       .hero-grid{grid-template-columns:1fr;gap:0}
@@ -384,19 +399,55 @@
       .creative-bottom{grid-template-columns:1fr}
     }
     @media(max-width:768px){
-      .container{padding:0 22px}
+      .container{padding:0 20px}
       .nav-links{display:none}
       .hamburger{display:flex}
-      .hero-name{font-size:3rem}
+      /* hero */
+      .hero{padding:100px 0 60px}
+      .hero-name{font-size:2.8rem}
+      .hero-bio{font-size:.95rem}
+      .hero-badge{font-size:.68rem}
+      /* sections */
+      #about{padding:70px 0 60px}
+      #skills,#projects,#creative{padding:64px 0}
+      #contact{padding:70px 0}
+      .about-header{margin-bottom:36px}
+      .about-grid{gap:28px}
+      .about-side{flex-direction:column;align-items:flex-start;gap:16px}
+      .about-avatar{width:100px;height:100px;font-size:2rem;border-radius:14px}
+      .about-quick-links{flex-direction:row;flex-wrap:wrap;gap:6px}
+      /* stats */
+      .stats-strip{grid-template-columns:repeat(2,1fr);gap:10px}
+      .stat-num{font-size:1.7rem}
+      .stat-card{padding:20px 14px}
+      /* skills */
+      .skills-header,.projects-header,.creative-header{margin-bottom:32px}
+      /* filter */
+      .filter-row{gap:6px}
+      .filter-btn{padding:6px 13px;font-size:.76rem}
+      /* projects */
       .proj-grid{grid-template-columns:1fr}
-      .stats-strip{grid-template-columns:repeat(2,1fr);gap:12px}
-      .pipeline{gap:0}
-      .modal-scroll{padding:36px 24px}
+      /* pipeline */
+      .pipeline{gap:0;padding-bottom:16px;-webkit-overflow-scrolling:touch}
+      .pipeline-stage{min-width:105px;padding:14px 12px}
+      .ps-icon{width:34px;height:34px}
+      /* modal bottom-sheet on mobile */
+      .modal-overlay{justify-content:center;align-items:flex-end}
+      .modal-panel{width:100%;max-width:100%;height:92dvh;border-left:none;border-top:1px solid var(--border-light);border-radius:16px 16px 0 0;transform:translateY(100%)}
+      .modal-overlay.open .modal-panel{transform:translateY(0)}
+      .modal-scroll{padding:32px 22px}
+      /* back to top */
+      #back-top{bottom:20px;right:20px;width:36px;height:36px}
     }
     @media(max-width:480px){
+      .hero-name{font-size:2.3rem}
       .hero-actions,.contact-actions{flex-direction:column;align-items:flex-start}
       .contact-actions{align-items:center}
       .footer-row{flex-direction:column;gap:8px;text-align:center}
+      .stats-strip{grid-template-columns:1fr 1fr}
+      .brands-row{gap:7px}
+      .brand-chip{padding:6px 10px}
+      .section-title{font-size:clamp(1.5rem,6vw,2rem)}
     }
   </style>
 </head>
@@ -483,10 +534,10 @@
           </div>
         </div>
         <div class="about-text">
-          <p>I'm a <strong>data analyst</strong> who covers the full stack from raw CSV to executive dashboard. My work covers three industries: <span class="hl">e-commerce</span>, <span class="hl">healthcare</span>, and <span class="hl">SaaS</span>, running every step of the pipeline myself.</p>
-          <p><strong>PostgreSQL</strong> is where the heavy work happens. <strong>Python</strong> handles cleaning and modeling. The final deliverable usually lands in <strong>Tableau</strong> or an <strong>Excel</strong> workbook built for whoever's going to open it.</p>
-          <p>Outside of analytics, I build AI automation tools for DTC and SaaS brands. The creative engine I built is a multi-agent Claude API workflow that goes from customer voice research all the way through to production-ready copy.</p>
-          <p>I'm also looking into <span class="hl">SDR and AE roles</span> at SaaS and data companies. Having a real analytics background means I actually understand the product before I pick up the phone.</p>
+          <p>I'm a <strong>data analyst</strong> who handles the full pipeline from raw data to the dashboard sitting in front of a decision-maker. My work spans three industries: <span class="hl">e-commerce</span>, <span class="hl">healthcare</span>, and <span class="hl">SaaS</span>, and I run every step myself.</p>
+          <p>I work primarily in <strong>PostgreSQL</strong> for the analysis and <strong>Python</strong> for cleaning and modeling. The final deliverable is usually <strong>Tableau</strong> or an <strong>Excel</strong> workbook, built for whoever actually has to use it.</p>
+          <p>Outside of analytics, I build AI automation tools for DTC and SaaS brands. The creative engine I put together is a multi-agent Claude API workflow that takes a brand from customer voice research to production-ready copy.</p>
+          <p>I'm also exploring <span class="hl">SDR and AE opportunities</span> at SaaS and data companies. Coming from an analytics background, I understand the product and the data behind it before the first conversation.</p>
         </div>
       </div>
 
@@ -775,6 +826,8 @@
       <span>Designed &amp; built by Ayushman Choudhury · 2025</span>
     </div>
   </footer>
+
+  <button id="back-top" aria-label="Back to top"><i class="fas fa-chevron-up"></i></button>
 
   <!-- PROJECT MODALS -->
   <div class="modal-overlay" id="modal-ravenstack">
@@ -1156,6 +1209,16 @@ rfm_scores <span class="kw">AS</span> (
     document.addEventListener('keydown',e=>{
       if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(closeModal);
     });
+
+    /* ── PAGE LOAD ──────────────────────────────────── */
+    window.addEventListener('load',()=>document.body.classList.add('loaded'));
+
+    /* ── BACK TO TOP ────────────────────────────────── */
+    const backTop=document.getElementById('back-top');
+    window.addEventListener('scroll',()=>{
+      backTop.classList.toggle('visible',window.scrollY>500);
+    },{passive:true});
+    backTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 
     /* ── MAGNETIC BUTTONS ───────────────────────────── */
     document.querySelectorAll('.btn-primary').forEach(btn=>{

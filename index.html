@@ -405,6 +405,10 @@
     /* ── CONTACT GLOW ───────────────────────────────────── */
     #contact{background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(45,212,191,.035),transparent 70%)}
 
+    /* ── FOOTER EGG HINT ────────────────────────────────── */
+    .footer-egg{font-family:var(--font-mono);font-size:.65rem;color:var(--text3);opacity:.45;letter-spacing:.06em}
+    .footer-egg kbd{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:.6rem;font-family:inherit}
+
     /* ── BACK TO TOP ────────────────────────────────────── */
     #back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface);border:1px solid var(--border-light);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.8rem;z-index:900;opacity:0;pointer-events:none;transition:all var(--t) var(--ease)}
     #back-top.visible{opacity:1;pointer-events:all}
@@ -864,6 +868,7 @@
     <div class="footer-row container">
       <span class="footer-logo">Ayushman<span>.</span></span>
       <span>Designed &amp; built by Ayushman Choudhury · 2025</span>
+      <span class="footer-egg">try <kbd>~</kbd></span>
     </div>
   </footer>
 
@@ -1120,30 +1125,126 @@
       else{tw.textContent=w.slice(0,--ci);if(ci===0){del=false;wi=(wi+1)%words.length;setTimeout(type,300);return}setTimeout(type,44)}
     })();
 
-    /* ── PARTICLES ──────────────────────────────────── */
-    const cv=document.getElementById('particles-canvas');
-    const cx=cv.getContext('2d');
-    let pts=[];
-    function resizeCv(){cv.width=window.innerWidth;cv.height=cv.parentElement.offsetHeight;initPts()}
-    function initPts(){const n=Math.floor(cv.width*cv.height/14000);pts=Array.from({length:n},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,a:Math.random()*.35+.08}))}
-    function drawPts(){
-      cx.clearRect(0,0,cv.width,cv.height);
-      pts.forEach((p,i)=>{
-        cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(45,212,191,${p.a})`;cx.fill();
-        for(let j=i+1;j<pts.length;j++){const q=pts[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);cx.strokeStyle=`rgba(45,212,191,${.055*(1-d/110)})`;cx.lineWidth=.5;cx.stroke()}}
-        p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>cv.width)p.vx*=-1;if(p.y<0||p.y>cv.height)p.vy*=-1;
+    /* ── NEURAL NETWORK CANVAS + SPOTLIGHT ─────────── */
+    (function(){
+      const cv=document.getElementById('particles-canvas');
+      const cx=cv.getContext('2d');
+      const hero=document.querySelector('.hero');
+      const sp=document.getElementById('hero-spotlight');
+      let nodes=[],mx=-9999,my=-9999;
+
+      function resize(){
+        cv.width=window.innerWidth;
+        cv.height=hero.offsetHeight;
+        init();
+      }
+
+      function init(){
+        const isMobile=window.innerWidth<768;
+        const n=Math.min(Math.floor(cv.width*cv.height/(isMobile?18000:8500)),isMobile?22:44);
+        nodes=Array.from({length:n},(_,i)=>({
+          x:Math.random()*cv.width, y:Math.random()*cv.height,
+          vx:(Math.random()-.5)*.22, vy:(Math.random()-.5)*.22,
+          r:i<4?3.4:Math.random()*1.5+.7,
+          phase:Math.random()*Math.PI*2,
+          hub:i<4
+        }));
+      }
+
+      function draw(){
+        cx.clearRect(0,0,cv.width,cv.height);
+        nodes.forEach((p,i)=>{
+          // Mouse repulsion
+          const ddx=p.x-mx,ddy=p.y-my,md=Math.hypot(ddx,ddy);
+          if(md<170&&md>0){const f=(170-md)/170*.55;p.vx+=(ddx/md)*f;p.vy+=(ddy/md)*f}
+          // Friction
+          p.vx*=.955; p.vy*=.955;
+          p.x+=p.vx;  p.y+=p.vy;
+          if(p.x<0||p.x>cv.width)p.vx*=-1;
+          if(p.y<0||p.y>cv.height)p.vy*=-1;
+          p.x=Math.max(0,Math.min(cv.width,p.x));
+          p.y=Math.max(0,Math.min(cv.height,p.y));
+          p.phase+=.011;
+          const pr=p.r+Math.sin(p.phase)*.45;
+
+          // Hub glow aura
+          if(p.hub){
+            const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,pr*5);
+            g.addColorStop(0,'rgba(45,212,191,.13)');
+            g.addColorStop(1,'rgba(45,212,191,0)');
+            cx.beginPath();cx.arc(p.x,p.y,pr*5,0,Math.PI*2);
+            cx.fillStyle=g;cx.fill();
+          }
+
+          // Node dot
+          cx.beginPath();cx.arc(p.x,p.y,pr,0,Math.PI*2);
+          cx.fillStyle=p.hub?'rgba(45,212,191,.82)':'rgba(45,212,191,.42)';
+          cx.fill();
+
+          // Connections
+          for(let j=i+1;j<nodes.length;j++){
+            const q=nodes[j];
+            const d=Math.hypot(p.x-q.x,p.y-q.y);
+            if(d<145){
+              const a=(1-d/145)*(p.hub||q.hub?.32:.2);
+              cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);
+              cx.strokeStyle=`rgba(45,212,191,${a})`;
+              cx.lineWidth=(1-d/145)*(p.hub||q.hub?1.6:1);
+              cx.stroke();
+            }
+          }
+        });
+        requestAnimationFrame(draw);
+      }
+
+      // Unified mouse: drives both spotlight and node repulsion
+      hero.addEventListener('mousemove',e=>{
+        const r=hero.getBoundingClientRect();
+        mx=e.clientX-r.left; my=e.clientY-r.top;
+        sp.style.background=`radial-gradient(680px circle at ${mx}px ${my}px,rgba(45,212,191,.08),transparent 70%)`;
       });
-      requestAnimationFrame(drawPts);
-    }
-    resizeCv();drawPts();window.addEventListener('resize',resizeCv);
+      hero.addEventListener('mouseleave',()=>{
+        mx=-9999; my=-9999;
+        sp.style.background='none';
+      });
+
+      resize(); draw(); window.addEventListener('resize',resize);
+    })();
 
     /* ── MARQUEE ────────────────────────────────────── */
     const mItems=[{icon:'fas fa-database',label:'PostgreSQL'},{icon:'fab fa-python',label:'Python'},{icon:'fas fa-table-columns',label:'Tableau'},{icon:'fas fa-file-excel',label:'Excel'},{icon:'fas fa-chart-pie',label:'Power BI'},{icon:'fab fa-react',label:'Next.js'},{icon:'fas fa-robot',label:'AI Automation'},{icon:'fas fa-magnifying-glass-chart',label:'Business Intelligence'},{icon:'fas fa-code',label:'TypeScript'},{icon:'fas fa-layer-group',label:'Data Pipelines'}];
     const mt=document.getElementById('marquee-track');
     [...mItems,...mItems].forEach(it=>{const el=document.createElement('span');el.className='marquee-item';el.innerHTML=`<i class="${it.icon}"></i>${it.label}<span class="marquee-sep">·</span>`;mt.appendChild(el)});
 
+    /* ── HEADING SCRAMBLE ───────────────────────────── */
+    function scrambleHeading(el){
+      const orig=el.textContent;
+      const pool='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
+      let f=0; const total=orig.length*2+20;
+      const t=setInterval(()=>{
+        if(f>=total){el.textContent=orig;clearInterval(t);return}
+        const settled=Math.floor(f/2);
+        let out='';
+        for(let i=0;i<orig.length;i++){
+          if(orig[i]===' ')out+=' ';
+          else if(i<settled)out+=orig[i];
+          else out+=pool[Math.floor(Math.random()*pool.length)];
+        }
+        el.textContent=out; f++;
+      },38);
+    }
+
     /* ── REVEAL ─────────────────────────────────────── */
-    const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -32px 0px'});
+    const revObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          const title=e.target.querySelector('.section-title');
+          if(title&&!title.dataset.sc){title.dataset.sc='1';setTimeout(()=>scrambleHeading(title),180)}
+          revObs.unobserve(e.target);
+        }
+      });
+    },{threshold:.08,rootMargin:'0px 0px -32px 0px'});
     document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
     /* ── COUNTER SCRAMBLE ───────────────────────────── */
@@ -1268,17 +1369,6 @@ rfm_scores <span class="kw">AS</span> (
       },1500);
     })();
 
-    /* ── HERO SPOTLIGHT ─────────────────────────────── */
-    (function(){
-      const hero=document.querySelector('.hero');
-      const sp=document.getElementById('hero-spotlight');
-      if(!hero||!sp)return;
-      hero.addEventListener('mousemove',e=>{
-        const r=hero.getBoundingClientRect();
-        sp.style.background=`radial-gradient(700px circle at ${e.clientX-r.left}px ${e.clientY-r.top}px,rgba(45,212,191,.08),transparent 70%)`;
-      });
-      hero.addEventListener('mouseleave',()=>sp.style.background='none');
-    })();
 
     /* ── 3D CARD TILT ───────────────────────────────── */
     document.querySelectorAll('.proj-card').forEach(card=>{
@@ -1301,6 +1391,72 @@ rfm_scores <span class="kw">AS</span> (
       backTop.classList.toggle('visible',window.scrollY>500);
     },{passive:true});
     backTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+    /* ── SQL RAIN EASTER EGG ────────────────────────── */
+    (function(){
+      const TERMS=['SELECT','FROM','WHERE','JOIN','GROUP BY','ORDER BY','COUNT(*)','SUM()','AVG()','MAX()','MIN()','PARTITION BY','OVER()','WITH','CASE WHEN','HAVING','DISTINCT','INNER JOIN','LEFT JOIN','CTE','COALESCE','NTILE()','LAG()','LEAD()','ROW_NUMBER()','DATE_TRUNC','EXTRACT','RANK()','ARRAY_AGG','Python','pandas','numpy','Tableau','Power BI','RFM','MRR','NRR','CHURN','COHORT','ETL','$161K','89.3%','242K','ANALYTICS','NULL','BOOLEAN','INDEX','FOREIGN KEY','WINDOW','OVER','PIVOT','UNPIVOT','LATERAL','JSONB'];
+      let active=false,raf,drops,cols;
+
+      function start(){
+        active=true;
+        const ov=document.createElement('div');
+        ov.id='rain-ov';
+        ov.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(4,9,18,.96);cursor:pointer;opacity:0;transition:opacity .3s ease;';
+        const rc=document.createElement('canvas');
+        rc.style.cssText='position:absolute;inset:0;width:100%;height:100%;';
+        ov.appendChild(rc);
+        const hint=document.createElement('div');
+        hint.style.cssText='position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-family:"Fira Code",monospace;font-size:.62rem;color:rgba(45,212,191,.4);letter-spacing:.12em;text-transform:uppercase;pointer-events:none;white-space:nowrap;';
+        hint.textContent='press ~ or esc to exit · click anywhere';
+        ov.appendChild(hint);
+        ov.addEventListener('click',stop);
+        document.body.appendChild(ov);
+        requestAnimationFrame(()=>ov.style.opacity='1');
+
+        rc.width=window.innerWidth; rc.height=window.innerHeight;
+        const ctx=rc.getContext('2d');
+        const fs=13;
+        cols=Math.max(Math.floor(rc.width/72),1);
+        drops=Array.from({length:cols},()=>-(Math.random()*(rc.height/fs)));
+
+        function frame(){
+          ctx.fillStyle='rgba(4,9,18,.055)';
+          ctx.fillRect(0,0,rc.width,rc.height);
+          const colW=rc.width/cols;
+          drops.forEach((y,i)=>{
+            const x=i*colW;
+            // Leading term — bright white-green
+            ctx.font=`bold ${fs}px "Fira Code",monospace`;
+            ctx.fillStyle='rgba(210,255,245,.95)';
+            ctx.fillText(TERMS[Math.floor(Math.random()*TERMS.length)],x,y*fs);
+            // Trail fading out
+            ctx.fillStyle='rgba(45,212,191,.6)';
+            ctx.fillText(TERMS[Math.floor(Math.random()*TERMS.length)],x,(y-1)*fs);
+            ctx.fillStyle='rgba(45,212,191,.28)';
+            ctx.fillText(TERMS[Math.floor(Math.random()*TERMS.length)],x,(y-2)*fs);
+            ctx.fillStyle='rgba(45,212,191,.1)';
+            ctx.fillText(TERMS[Math.floor(Math.random()*TERMS.length)],x,(y-3)*fs);
+            if(y*fs>rc.height&&Math.random()>.972)drops[i]=0;
+            drops[i]+=.38;
+          });
+          if(active)raf=requestAnimationFrame(frame);
+        }
+        raf=requestAnimationFrame(frame);
+      }
+
+      function stop(){
+        active=false; cancelAnimationFrame(raf);
+        const ov=document.getElementById('rain-ov');
+        if(!ov)return;
+        ov.style.opacity='0';
+        setTimeout(()=>ov.remove(),320);
+      }
+
+      document.addEventListener('keydown',e=>{
+        if(e.key==='`'||e.key==='~'){active?stop():start();}
+        if(e.key==='Escape'&&active)stop();
+      });
+    })();
 
     /* ── MAGNETIC BUTTONS ───────────────────────────── */
     document.querySelectorAll('.btn-primary').forEach(btn=>{
